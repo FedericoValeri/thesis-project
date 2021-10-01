@@ -15,10 +15,9 @@ scaled.number.of.users <- scale.factor * project.count.data$requests
 #set a number of load levels to plot the operational profile
 num.load.levels <- 50
 
-#identify bins
 options(repr.plot.width=10, repr.plot.height=6)
-num.users.hist <- hist(scaled.number.of.users,
-                       breaks = num.load.levels,
+num.users.hist <- hist(scaled.number.of.users, #single number giving the number of cells for the histogram
+                       breaks = num.load.levels, #
                        col = "darkgray", border = "white",
                        xlab = "scaled number of users", main = "histogram of scaled number of users",
                        plot=T)
@@ -68,7 +67,7 @@ aggregateValues<-function(myOrderedSplitting, accessFrequency, scaledUsersLoad){
       }
     }
     binProbRounded<-round(binProb, digits = 2)
-    aggregatedValues<-matrix(c(scaledUsersLoad[byN], binProbRounded), ncol=2,nrow=length(binProbRounded), dimnames=list(c(1:length(binProbRounded)), c("Workload (number of users)", "Domain metric per workload")))
+    aggregatedValues<-matrix(c(scaledUsersLoad[byN], binProbRounded), ncol=2,nrow=length(binProbRounded), dimnames=list(c(1:length(binProbRounded)), c("Workload (number of users)", "Probability of occurence")))
     #print(scaledUsersLoad[byN])
   }else{
     #print(myOrderedSplitting)
@@ -81,7 +80,7 @@ aggregateValues<-function(myOrderedSplitting, accessFrequency, scaledUsersLoad){
         binProb[i]<-sum(accessFrequency[(which.min(abs(scaledUsersLoad - myOrderedSplitting[i-1]))+1): which.min(abs(scaledUsersLoad - myOrderedSplitting[i]))])
       }
     }
-    aggregatedValues<-matrix(c(myOrderedSplitting, binProb), ncol=2,nrow=length(binProb), dimnames=list(c(1:length(binProb)), c("Workload (number of users)", "Domain metric per workload")))
+    aggregatedValues<-matrix(c(myOrderedSplitting, binProb), ncol=2,nrow=length(binProb), dimnames=list(c(1:length(binProb)), c("Workload (number of users)", "Probability of occurence")))
   }
   return(aggregatedValues)
 }
