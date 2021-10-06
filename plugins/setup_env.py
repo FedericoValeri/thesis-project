@@ -20,8 +20,8 @@ def check_minikube_status(global_plugin_state, current_configuration, output, te
         logging.warning("Minikube is not started")
 
 
-def install_istio(global_plugin_state, current_configuration, output, test):
-    run_external_applicaton("istioctl install --set profile=demo -y")
+# def install_istio(global_plugin_state, current_configuration, output, test):
+#     run_external_applicaton("istioctl install --set profile=demo -y")
 
-def inject_proxies(global_plugin_state, current_configuration, output, test):
-    run_external_applicaton("kubectl label namespace default istio-injection=enabled")
+# def inject_proxies(global_plugin_state, current_configuration, output, test):
+#     run_external_applicaton("kubectl label namespace default istio-injection=enabled")

@@ -10,7 +10,7 @@ from lib import run_external_applicaton
 
 def deploy_app(global_plugin_state, current_configuration, output, test_id):
     #seconds_to_wait_for_running_pods = int(current_configuration["MINIKUBE_WAITING_FOR_PODS_RUNNING_IN_SECONDS"])
-    run_external_applicaton('kubectl apply -f ./design/minikube.yaml')
+    run_external_applicaton('kubectl apply -f ./config/minikube-sock-shop.yaml')
 
 
 def check_status():

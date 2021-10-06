@@ -20,7 +20,7 @@ num.users.hist <- hist(scaled.number.of.users, #single number giving the number 
                        breaks = num.load.levels, #
                        col = "darkgray", border = "white",
                        xlab = "scaled number of users", main = "histogram of scaled number of users",
-                       plot=T)
+                       plot=F)
 
 #accessFrequency viene calcolata sommando tutti gli accessCount e dividendo per ogni valore
 num.users.hist$frequency<-num.users.hist$counts / sum(num.users.hist$counts)
@@ -114,5 +114,6 @@ for (i in 1:length(higherProbs)) {
     
   }
 }
+#finalWorkloads
 
-print(finalWorkloads)
+write.csv(finalWorkloads, file = "./output/worklaods.csv", row.names = FALSE)
