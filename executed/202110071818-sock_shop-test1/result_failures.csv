@@ -1,0 +1,54 @@
+Method,Name,Error,Occurrences
+GET,get_catalogue2,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",10
+GET,get_customer_orders,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",4
+GET,get_card,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",4
+GET,login,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",10
+GET,get_item,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",15
+GET,get_customer_orders,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",283
+GET,get_tags,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",287
+GET,get_item,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",17
+GET,get_category,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",10
+GET,get_catalogue1,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",1108
+GET,get_detail,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",5
+GET,get_index,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",1060
+GET,get_item,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",760
+GET,get_tags,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",6
+GET,get_catalogue3,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",6
+GET,get_orders,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",9
+GET,get_related,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",1
+GET,get_related,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",11
+GET,get_category,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",4
+GET,get_related,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",335
+GET,get_detail,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",348
+GET,get_cart,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",2079
+GET,get_address,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",5
+POST,add_item_to_cart,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",58
+GET,get_index,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",12
+GET,get_detail,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",10
+GET,get_address,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",1
+GET,get_catalogue2,"(""Connection broken: InvalidChunkLength(got length b'', 0 bytes read)"", InvalidChunkLength(got length b'', 0 bytes read))",1
+GET,get_customer_orders,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",5
+GET,get_catalogue1,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",17
+GET,get_orders,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",350
+GET,get_card,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",56
+GET,get_customer,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",18
+GET,get_basket,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",56
+GET,get_cart,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",64
+GET,get_address,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",60
+GET,get_category,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",284
+GET,get_cart,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",25
+GET,get_basket,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",3
+GET,get_index,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",25
+GET,get_catalogue2,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",286
+GET,get_catalogue2,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",5
+GET,login,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",10
+GET,get_catalogue3,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",5
+GET,get_customer,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",29
+GET,get_tags,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",12
+GET,get_orders,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",14
+GET,get_card,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",2
+GET,login,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",270
+GET,get_catalogue1,"('Connection aborted.', ConnectionResetError(10054, ""Connessione in corso interrotta forzatamente dall'host remoto"", None, 10054, None))",35
+POST,add_item_to_cart,"('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",2
+GET,get_catalogue3,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",293
+GET,get_customer,"('Connection aborted.', ConnectionAbortedError(10053, 'Connessione interrotta dal software del computer host', None, 10053, None))",980

@@ -3,7 +3,6 @@ import json
 import datetime
 import secrets
 from locust import HttpUser, task, between, constant
-import requests
 
 import locust.stats
 locust.stats.CONSOLE_STATS_INTERVAL_SEC = 1

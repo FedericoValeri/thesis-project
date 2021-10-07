@@ -39,33 +39,37 @@ def create_test_plan():
         config.write(configfile)
 
 
-def get_metrics_during_test(configuration, section, container_name):
+def get_metrics_during_test(metric, configuration, section, container_name):
     run_time = configuration[section]["run_time_in_seconds"]
-    run_time_in_minutes = str(int(run_time) // 60)
+    #run_time_in_minutes = str(int(run_time) // 60)
     prometheus_url = configuration[section]["PROMETHEUS_HOST_URL"]
     stop = datetime.datetime.now() + datetime.timedelta(seconds=int(run_time))
+    is_cpu = metric == Metrics().CPU
+    is_memory = metric == Metrics().MEMORY
+
     metrics = []
     # for a time span of the same duration of the test execution
     while datetime.datetime.now() < stop:
         # collect metrics each 5 seconds
         time.sleep(5)
-        query = "sum(rate(container_cpu_usage_seconds_total{container='" + \
-            container_name + \
+        if(is_cpu):
+            query = "sum(rate(container_cpu_usage_seconds_total{container='" + container_name + \
                 "',pod!='', image!=''}[1m])) by (pod) / 2"
+        if(is_memory):
+            query = "sum(container_memory_working_set_bytes{pod!='', image!='', container='" + \
+                container_name + "'}) by (pod) / 2"
         response = requests.get(
             prometheus_url + '/api/v1/query', params={'query': query})
         results = response.json()['data']['result']
         for result in results:
             metrics.append('{value[1]}'.format(**result))
     max_metric_value = max(metrics)
-    numeric_metrics = [float(numeric_string) for numeric_string in metrics]
-    average_metric_value = sum(numeric_metrics) / len(numeric_metrics)
-    print(f'Max cpu value is {max_metric_value}')
-    print(f'Average cpu value is {average_metric_value}')
-    f2 = open("./metrics/cpu_values.txt", "a")
-    f2.write(max_metric_value + '\n')
-    f2.write(str(average_metric_value) + '\n')
-    f2.close()
+    print(f'Max value for {metric} is: {max_metric_value}')
+    # numeric_metrics = [float(numeric_string) for numeric_string in metrics]
+    # average_metric_value = sum(numeric_metrics) / len(numeric_metrics)
+    f = open(f"./metrics/monitored_{metric}.txt", "a")
+    f.write(max_metric_value + '\n')
+    f.close()
     metrics.clear()
 
 ###############################################################
@@ -100,9 +104,15 @@ def get_metric(metric, configuration, section, container_name):
     f.write(metric_value + '\n')
     f.close()
 
+# def provide_reccomendations():
+#     f2 = open("./metrics/monitored_cpu.txt", "a")
+#     f2.write(max_metric_value + '\n')
+#     #f2.write(str(average_metric_value) + '\n')
+#     f2.close()
+
 
 def execute_tests(configuration):
-    # create_test_plan()
+    create_test_plan()
     container_name = configuration["DEFAULT"]["CONTAINER_TO_BE_MONIORED"]
     for section in configuration.sections():
         if section.lower().startswith("test"):
@@ -126,18 +136,22 @@ def execute_tests(configuration):
 ########## THREADING ###########
 
 if __name__ == "__main__":
+    create_test_plan()
     design_path = './config/'
     configuration = configparser.ConfigParser()
     configuration.read([os.path.join(
         design_path, "configuration.ini"), os.path.join(design_path, "test_plan.ini")])
     for section in configuration.sections():
         if section.lower().startswith("test"):
-            testTask = Thread(target=perform_test, args=[
+            test = Thread(target=perform_test, args=[
                 configuration, section, design_path])
-            # monitorTask = Thread(target=get_metrics_during_test, args=[
-            #     configuration, "DEFAULT", "carts"])
-            testTask.start()
-            monitorTask = Timer(60.0, get_metrics_during_test, [configuration, "DEFAULT", "carts"])
-            monitorTask.start()
-            testTask.join()
-            monitorTask.join()
+            monitor_cpu = Thread(target=get_metrics_during_test, args=[
+                "cpu", configuration, "DEFAULT", "carts"])
+            monitor_memory = Thread(target=get_metrics_during_test, args=[
+                "memory", configuration, "DEFAULT", "carts"])
+            test.start()
+            monitor_cpu.start()
+            monitor_memory.start()
+            test.join()
+            monitor_cpu.join()
+            monitor_memory.join()

@@ -135,6 +135,9 @@ def perform_test(configuration, section, design_path):
 
     run_plugins(configuration, section, output, test_id, "run_locust")
 
+    # aspetto tra un test e l'altro solo se uso i thread
+    time.sleep(30)
+
     logging.info(
         f"Test {test_id} completed. Test results can be found in {output}.")
 
