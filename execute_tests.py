@@ -46,7 +46,7 @@ def create_test_plan():
 
 def get_metrics_during_test(metric, configuration, section, container_name):
     run_time = configuration[section]["run_time_in_seconds"]
-    #run_time_in_minutes = str(int(run_time) // 60)
+    # run_time_in_minutes = str(int(run_time) // 60)
     prometheus_url = configuration[section]["PROMETHEUS_HOST_URL"]
     stop = datetime.datetime.now() + datetime.timedelta(seconds=int(run_time))
     is_cpu = metric == Metrics().CPU
@@ -69,7 +69,6 @@ def get_metrics_during_test(metric, configuration, section, container_name):
         for result in results:
             metrics.append('{value[1]}'.format(**result))
     max_metric_value = max(metrics)
-    print(f'Max value for {metric} is: {max_metric_value}')
     # numeric_metrics = [float(numeric_string) for numeric_string in metrics]
     # average_metric_value = sum(numeric_metrics) / len(numeric_metrics)
     f = open(f"./metrics/monitored_{metric}.txt", "a")
@@ -135,12 +134,9 @@ def convert_size(size_bytes):
     return "%s%s" % (s, size_name[i])
 
 
-def provide_reccomendations(metrics, configuration, section, container_name):
-    target_cpu = 0
-    target_memory = 0
-    cpu_request = 0
-    memory_request = 0
-    query = ""
+def provide_recommendations(metrics, configuration, section, container_name):
+
+    # Verical scaling
     prometheus_url = configuration[section]["PROMETHEUS_HOST_URL"]
     for metric in metrics:
         lines = []
@@ -159,24 +155,51 @@ def provide_reccomendations(metrics, configuration, section, container_name):
                 cpu_request = int(float(value) * 1000)
         if(metric == Metrics().MEMORY):
             target_memory = convert_size(int(target_metric))
+            target_memory_int = int(target_metric)
             for result in results:
                 value = ('{value[1]}'.format(**result))
                 memory_request = convert_size(int(value))
+                memory_request_int = int(value)
 
+    # Horizontal scaling
+    tolerance = 0.1
+    current_replicas = int(configuration[section]["CURRENT_REPLICAS"])
+    desired_replicas_for_cpu = math.ceil(
+        current_replicas * (target_cpu / cpu_request) - tolerance)
+    desired_replicas_for_memory = math.ceil(
+        current_replicas * (target_memory_int / memory_request_int) - tolerance)
+    if(desired_replicas_for_cpu and desired_replicas_for_memory == 1):
+        desired_replicas = 1
+    else:
+        desired_replicas = max(desired_replicas_for_cpu,
+                               desired_replicas_for_memory)
+
+    # Display recommendations
+    cpu_request = str(cpu_request) + 'm'
     target_cpu = str(target_cpu) + 'm'
-    # creating an empty PrettyTable
-    ascii_table = PrettyTable()
 
-    # adding data into the table column by column
-    ascii_table.add_column("Metrics", metrics)
-    ascii_table.add_column("Actual requests", [str(
-        cpu_request) + 'm', memory_request])
-    ascii_table.add_column("Target", [target_cpu, target_memory])
+    yaml_console_output = dict(
+        Recommendation=dict(dict(
+            Containers=dict(
+                Name=container_name,
+                VerticalScaling=dict(
+                    Actual=dict(
+                        Cpu=cpu_request,
+                        Memory=memory_request),
+                    Target=dict(
+                        Cpu=target_cpu,
+                        Memory=target_memory)
+                ),
+                HorizontalScaling=dict(
+                    Replicas=dict(
+                        Target=desired_replicas)
+                )
+            )
+        )
+        )
+    )
 
-    # printing table
-    print(ascii_table)
-
-    yaml_output = dict(
+    yaml_file_output = dict(
         resources=dict(
             requests=dict(
                 cpu=target_cpu,
@@ -185,10 +208,12 @@ def provide_reccomendations(metrics, configuration, section, container_name):
         )
     )
 
-    with open('test.yaml', 'w') as outfile:
-        yaml.dump(yaml_output, outfile, default_flow_style=False)
+    yaml.safe_dump(yaml_console_output, sys.stdout, sort_keys=False)
 
-    yaml.safe_dump(yaml_output, sys.stdout)
+    # Vertical scaling yaml
+    with open('test.yaml', 'w') as outfile:
+        yaml.dump(yaml_file_output, outfile, default_flow_style=False)
+    yaml.safe_dump(yaml_file_output, sort_keys=False)
 
 
 # if __name__ == "__main__":
@@ -197,27 +222,29 @@ def provide_reccomendations(metrics, configuration, section, container_name):
 #     configuration.read([os.path.join(
 #         design_path, "configuration.ini"), os.path.join(design_path, "test_plan.ini")])
 #     execute_tests(configuration)
-########## THREADING ###########
+
+
+########## THREADING MAIN ###########
 if __name__ == "__main__":
-    # create_test_plan()
+    create_test_plan()
     design_path = './config/'
     configuration = configparser.ConfigParser()
     configuration.read([os.path.join(
         design_path, "configuration.ini"), os.path.join(design_path, "test_plan.ini")])
     container_name = configuration["DEFAULT"]["CONTAINER_TO_BE_MONIORED"]
-    # for section in configuration.sections():
-    #     if section.lower().startswith("test"):
-    #         test = Thread(target=perform_test, args=[
-    #             configuration, section, design_path])
-    #         monitor_cpu = Thread(target=get_metrics_during_test, args=[
-    #             "cpu", configuration, "DEFAULT", container_name])
-    #         monitor_memory = Thread(target=get_metrics_during_test, args=[
-    #             "memory", configuration, "DEFAULT", container_name])
-    #         test.start()
-    #         monitor_cpu.start()
-    #         monitor_memory.start()
-    #         test.join()
-    #         monitor_cpu.join()
-    #         monitor_memory.join()
+    for section in configuration.sections():
+        if section.lower().startswith("test"):
+            test = Thread(target=perform_test, args=[
+                configuration, section, design_path])
+            monitor_cpu = Thread(target=get_metrics_during_test, args=[
+                "cpu", configuration, "DEFAULT", container_name])
+            monitor_memory = Thread(target=get_metrics_during_test, args=[
+                "memory", configuration, "DEFAULT", container_name])
+            test.start()
+            monitor_cpu.start()
+            monitor_memory.start()
+            test.join()
+            monitor_cpu.join()
+            monitor_memory.join()
     metrics = ['cpu', 'memory']
     provide_reccomendations(metrics, configuration, "DEFAULT", container_name)
