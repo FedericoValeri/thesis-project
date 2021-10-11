@@ -134,7 +134,7 @@ def convert_size(size_bytes):
     return "%s%s" % (s, size_name[i])
 
 
-def provide_recommendations(metrics, configuration, section, container_name):
+def provide_reccomendations(metrics, configuration, section, container_name):
 
     # Verical scaling
     prometheus_url = configuration[section]["PROMETHEUS_HOST_URL"]
@@ -168,7 +168,7 @@ def provide_recommendations(metrics, configuration, section, container_name):
         current_replicas * (target_cpu / cpu_request) - tolerance)
     desired_replicas_for_memory = math.ceil(
         current_replicas * (target_memory_int / memory_request_int) - tolerance)
-    if(desired_replicas_for_cpu and desired_replicas_for_memory == 1):
+    if(desired_replicas_for_cpu == 1 and desired_replicas_for_memory == 1):
         desired_replicas = 1
     else:
         desired_replicas = max(desired_replicas_for_cpu,
@@ -211,7 +211,7 @@ def provide_recommendations(metrics, configuration, section, container_name):
     yaml.safe_dump(yaml_console_output, sys.stdout, sort_keys=False)
 
     # Vertical scaling yaml
-    with open('test.yaml', 'w') as outfile:
+    with open('vertical-scaling.yaml', 'w') as outfile:
         yaml.dump(yaml_file_output, outfile, default_flow_style=False)
     yaml.safe_dump(yaml_file_output, sort_keys=False)
 

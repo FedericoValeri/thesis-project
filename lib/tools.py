@@ -138,6 +138,7 @@ def perform_test(configuration, section, design_path):
     # aspetto tra un test e l'altro solo se uso i thread
     time.sleep(30)
 
+    print(f'Test {test_id} completed')
     logging.info(
         f"Test {test_id} completed. Test results can be found in {output}.")
 
